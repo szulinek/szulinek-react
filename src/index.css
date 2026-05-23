@@ -35,10 +35,10 @@ html[data-theme="light"] {
   --color-line: 203 213 225;
   --color-text-main: 15 23 42;
   --color-text-muted: 51 65 85;
-  --color-text-soft: 100 116 139;
-  --color-accent: 8 145 178;
-  --color-accent-soft: 14 116 144;
-  --color-accent-hover: 14 116 144;
+  --color-text-soft: 71 85 105;
+  --color-accent: 14 116 144;
+  --color-accent-soft: 21 94 117;
+  --color-accent-hover: 21 94 117;
   --color-accent-contrast: 255 255 255;
   --color-terminal: 22 101 52;
   --color-terminal-panel: 240 253 244;
@@ -80,6 +80,13 @@ body {
   color: rgb(var(--color-text-main));
 }
 
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgb(var(--color-accent));
+  outline-offset: 2px;
+}
+
 .skip-link {
   position: fixed;
   left: 1rem;
@@ -118,7 +125,7 @@ body {
 }
 
 .scan-line {
-  filter: blur(18px);
+  opacity: 0.55;
 }
 
 .terminal-grid {
@@ -138,7 +145,6 @@ body {
   width: 2rem;
   height: 2.05rem;
   flex: 0 0 auto;
-  filter: drop-shadow(0 0 10px rgb(var(--color-terminal-glow) / 0.22));
 }
 
 .linux-penguin-body {
@@ -223,9 +229,17 @@ body {
 .terminal-ticker {
   position: relative;
   isolation: isolate;
+  contain: layout paint;
+  min-height: 2.5rem;
   box-shadow:
     inset 0 0 28px rgb(var(--color-terminal-glow) / 0.08),
     0 0 34px rgb(var(--color-terminal-glow) / 0.14);
+}
+
+@media (min-width: 640px) {
+  .terminal-ticker {
+    min-height: 2.75rem;
+  }
 }
 
 .terminal-ticker::before,
@@ -297,6 +311,7 @@ body {
 
 .terminal-ticker-shake {
   animation: terminal-shake 4.8s linear infinite;
+  will-change: transform;
 }
 
 .terminal-ticker-text {
@@ -343,9 +358,32 @@ body {
   animation: terminal-cursor-blink 0.95s steps(2, start) infinite;
 }
 
+.terminal-ticker[data-static="true"]::after,
+.terminal-ticker[data-static="true"] .terminal-ticker-shake,
+.terminal-ticker[data-static="true"] .terminal-ticker-text::before,
+.terminal-ticker[data-static="true"] .terminal-ticker-text::after,
+.terminal-ticker[data-static="true"] .terminal-scramble,
+.terminal-ticker[data-static="true"] .terminal-ticker-cursor {
+  animation: none;
+}
+
+.terminal-ticker[data-static="true"] .terminal-ticker-text::before,
+.terminal-ticker[data-static="true"] .terminal-ticker-text::after,
+.terminal-ticker[data-static="true"] .terminal-scramble {
+  display: none;
+}
+
+.terminal-ticker[data-static="true"] .terminal-ticker-cursor {
+  opacity: 1;
+}
+
+.terminal-ticker[data-static="true"] .terminal-ticker-shake {
+  will-change: auto;
+}
+
 .terminal-scramble {
   display: inline-block;
-  margin-left: 0.08rem;
+  transform: translateX(0.08rem);
   color: rgb(var(--color-accent));
   opacity: 0.68;
   text-shadow: 0 0 12px rgb(var(--color-terminal-glow) / 0.34);
@@ -491,5 +529,12 @@ body {
 
   .terminal-scramble {
     display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .scan-line,
+  .terminal-caret {
+    animation: none !important;
   }
 }

@@ -8,7 +8,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative isolate overflow-hidden pb-16 pt-10 sm:pb-20 sm:pt-14 lg:pb-24 lg:pt-16"
+      className="relative isolate min-h-[640px] overflow-hidden pb-16 pt-10 sm:min-h-[680px] sm:pb-20 sm:pt-14 lg:min-h-[660px] lg:pb-24 lg:pt-16"
       aria-labelledby="hero-title"
     >
       <div className="hero-grid absolute inset-0 -z-20" aria-hidden="true" />

@@ -65,6 +65,7 @@ export default function TerminalTicker({ className = '', variant = 'panel' }) {
   const isMobileTicker = useIsMobileTicker();
   const texts = isMobileTicker ? t.terminalTicker.mobileTexts : t.terminalTicker.texts;
   const prefersReducedMotion = usePrefersReducedMotion();
+  const shouldUseStaticText = prefersReducedMotion || isMobileTicker;
   const [index, setIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [phase, setPhase] = useState('typing');
@@ -76,7 +77,7 @@ export default function TerminalTicker({ className = '', variant = 'panel' }) {
   }, [texts]);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
+    if (shouldUseStaticText) {
       setDisplayedText(texts[0]);
       setPhase('typing');
       setIndex(0);
@@ -111,11 +112,11 @@ export default function TerminalTicker({ className = '', variant = 'panel' }) {
     }, delayForPhase(phase, displayedText.length));
 
     return () => window.clearTimeout(timeoutId);
-  }, [displayedText, index, phase, prefersReducedMotion, texts]);
+  }, [displayedText, index, phase, shouldUseStaticText, texts]);
 
-  const currentText = prefersReducedMotion ? texts[0] : displayedText;
+  const currentText = shouldUseStaticText ? texts[0] : displayedText;
   const scrambleCharacter =
-    !prefersReducedMotion && phase !== 'pause' && currentText
+    !shouldUseStaticText && phase !== 'pause' && currentText
       ? scrambleCharacters[(currentText.length + index) % scrambleCharacters.length]
       : '';
 
@@ -124,11 +125,12 @@ export default function TerminalTicker({ className = '', variant = 'panel' }) {
       className={`${
         isLogo
           ? 'terminal-ticker-logo inline-flex w-fit max-w-full text-[0.78rem] text-terminal sm:text-sm'
-          : 'terminal-ticker w-full overflow-hidden rounded-lg border border-terminal/25 bg-terminal-panel px-3 py-2 text-xs text-terminal sm:px-4 sm:text-sm'
+          : 'terminal-ticker flex h-10 w-full items-center overflow-hidden rounded-lg border border-terminal/25 bg-terminal-panel px-3 text-xs text-terminal sm:h-11 sm:px-4 sm:text-sm'
       } ${className}`}
-      aria-label={t.terminalTicker.aria}
+      aria-hidden="true"
+      data-static={shouldUseStaticText ? 'true' : 'false'}
     >
-      <div className="terminal-ticker-shake relative z-10 flex min-w-0 items-center gap-2 font-mono">
+      <div className="terminal-ticker-shake relative z-10 flex h-full min-w-0 items-center gap-2 font-mono">
         <span className="shrink-0 text-terminal" aria-hidden="true">
           $
         </span>

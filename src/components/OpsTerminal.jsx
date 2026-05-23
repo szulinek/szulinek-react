@@ -12,7 +12,7 @@ export default function OpsTerminal() {
         <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="relative overflow-hidden rounded-lg border border-terminal/25 bg-terminal-panel shadow-glow">
             <div className="absolute inset-0 terminal-grid opacity-70" aria-hidden="true" />
-            <div className="absolute inset-x-0 top-0 h-20 animate-scan bg-terminal/10 blur-2xl" aria-hidden="true" />
+            <div className="scan-line absolute inset-x-0 top-0 hidden h-20 animate-scan bg-terminal/10 md:block" aria-hidden="true" />
 
             <div className="relative flex items-center gap-3 border-b border-terminal/20 bg-terminal/5 px-4 py-3">
               <LinuxPenguinLogo className="scale-75" />

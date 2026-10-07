@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: szulinek
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+
+    spec:
+      securityContext:
+        fsGroup: 1000
+
+      containers:
+        - name: backend
+          image: szulinek-backend:4a6ccdd-fix1
+          imagePullPolicy: Never
+
+          ports:
+            - name: http
+              containerPort: 3001
+
+          envFrom:
+            - secretRef:
+                name: backend-env
+
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+
+          volumeMounts:
+            - name: backend-data
+              mountPath: /app/server/data
+
+      volumes:
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: backend-data
